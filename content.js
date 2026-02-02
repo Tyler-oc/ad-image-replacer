@@ -1,54 +1,92 @@
-const FUN_IMAGE_URL = "https://a.espncdn.com/i/headshots/nba/players/full/1966.png";
+// FUN_IMAGES is defined in ad_images.js
 
-function replaceAds() {
-  const adSelectors = [
+function getRandomImage() {
+    if (typeof FUN_IMAGES !== 'undefined' && FUN_IMAGES.length > 0) {
+        return FUN_IMAGES[Math.floor(Math.random() * FUN_IMAGES.length)];
+    }
+    return "https://placekitten.com/200/200"; // Fallback
+}
+
+// Inject Custom CSS
+const style = document.createElement('style');
+style.textContent = `
+    .ad-replacer-image {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .ad-replacer-container {
+        overflow: hidden !important;
+        display: block !important;
+    }
+`;
+document.head.appendChild(style);
+
+function replaceAdsInRoot(root) {
+    const adSelectors = [
       'iframe[src*="ads"]',
       'iframe[id*="google_ads"]',
       'div[id*="google_ads"]',
       'div[class*="ad-container"]',
       'ins.adsbygoogle',
-      'a[href*="doubleclick.net"]'
-  ];
+      'a[href*="doubleclick.net"]',
+      'div[id*="taboola"]',
+      'div[id*="outbrain"]'
+    ];
 
-  const ads = document.querySelectorAll(adSelectors.join(','));
+    const ads = root.querySelectorAll(adSelectors.join(','));
 
-  ads.forEach(ad => {
-    // Avoid double replacement
-    if (ad.dataset.replaced === "true") return;
+    ads.forEach(ad => {
+        if (ad.dataset.replaced === "true") return;
 
-    console.log("Ad replacer: Found ad", ad);
+        console.log("Ad replacer: Found ad", ad);
 
-    const img = document.createElement('img');
-    img.src = FUN_IMAGE_URL;
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "cover";
-    img.title = "Replaced by Ad Image Replacer";
-    img.dataset.replaced = "true"; // Tag the replacement itself just in case
+        const img = document.createElement('img');
+        img.src = getRandomImage();
+        img.className = 'ad-replacer-image';
+        img.title = "Replaced by Ad Image Replacer";
+        img.dataset.replaced = "true";
 
-    // Replace the ad element with the image, or append if it's a container we want to keep structure of
-    // Strategy: Replace the content or the element itself. Let's try replacing the element.
-    if (ad.parentNode) {
-        ad.parentNode.replaceChild(img, ad);
-    }
-  });
+        // If it's a wrapper, we might want to keep dimensions but clear content
+        // For now, replacing the element is the main strategy
+        if (ad.parentNode) {
+            ad.parentNode.replaceChild(img, ad);
+        }
+    });
+
+    // Recursive Shadow DOM traversal
+    const allElements = root.querySelectorAll('*');
+    allElements.forEach(el => {
+        if (el.shadowRoot) {
+            replaceAdsInRoot(el.shadowRoot);
+        }
+    });
+}
+
+function replaceAds() {
+    replaceAdsInRoot(document);
 }
 
 // Initial replacement
 replaceAds();
 
-// Watch for dynamic ads
+// Watch for dynamic ads (and shadow roots)
 const observer = new MutationObserver((mutations) => {
-  let shouldRun = false;
-  for (const mutation of mutations) {
-      if (mutation.addedNodes.length) {
-          shouldRun = true;
-          break;
-      }
-  }
-  if (shouldRun) {
-      replaceAds();
-  }
+    let shouldRun = false;
+    for (const mutation of mutations) {
+        if (mutation.addedNodes.length) {
+            shouldRun = true;
+            // Also need to observe new shadow roots if attached, but MutationObserver doesn't directly see shadow root attachment.
+            // We rely on scanning added nodes.
+            break;
+        }
+    }
+    if (shouldRun) {
+        replaceAds();
+    }
 });
 
 observer.observe(document.body, {
@@ -56,4 +94,4 @@ observer.observe(document.body, {
   subtree: true
 });
 
-console.log("Ad Image Replacer content script loaded.");
+console.log("Ad Image Replacer content script loaded with Shadow DOM support.");

@@ -29,6 +29,7 @@
                 "<all_urls>"
             ],
             "js": [
+                "ad_images.js",
                 "content.js"
             ],
             "run_at": "document_end"
