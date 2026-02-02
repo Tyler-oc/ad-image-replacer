@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": { "url": "https://placekitten.com/200/200" }
+    },
+    "condition": {
+      "urlFilter": "doubleclick.net",
+      "resourceTypes": ["image", "sub_frame", "script", "xmlhttprequest"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": { "url": "https://placekitten.com/200/200" }
+    },
+    "condition": {
+      "urlFilter": "adservice.google.com",
+      "resourceTypes": ["image", "sub_frame", "script", "xmlhttprequest"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": { "url": "https://placekitten.com/200/200" }
+    },
+    "condition": {
+      "urlFilter": "pagead2.googlesyndication.com",
+      "resourceTypes": ["image", "sub_frame", "script", "xmlhttprequest"]
+    }
+  }
+]

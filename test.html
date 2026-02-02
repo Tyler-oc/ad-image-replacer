@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Replacer Test Page</title>
+    <style>
+        .ad-container {
+            width: 300px;
+            height: 250px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ad Replacer Test Page</h1>
+    <p>This page contains elements that should be replaced by the extension.</p>
+
+    <h2>Class 'ad-container'</h2>
+    <div class="ad-container">
+        Ad Content Here
+    </div>
+
+    <h2>ID 'google_ads'</h2>
+    <div id="google_ads_frame">
+        Google Ad Here
+    </div>
+
+    <h2>Iframe with 'ads' in src</h2>
+    <iframe src="https://example.com/ads/banner" width="300" height="250"></iframe>
+
+    <h2>Link to doubleclick.net</h2>
+    <a href="https://doubleclick.net">Doubleclick Link</a>
+    
+    <h2>Dynamic Ad (added after 3 seconds)</h2>
+    <div id="dynamic-area"></div>
+
+    <script>
+        setTimeout(() => {
+            const div = document.createElement('div');
+            div.className = 'ad-container';
+            div.innerText = 'Dynamic Ad';
+            document.getElementById('dynamic-area').appendChild(div);
+        }, 3000);
+    </script>
+</body>
+</html>
