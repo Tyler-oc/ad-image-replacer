@@ -1,19 +1,24 @@
 // Theme assets
 const THEMES: Record<string, string[]> = {
-  classic_cats: [
-      "https://placekitten.com/200/200",
-      "https://placekitten.com/g/200/300",
-      "https://placekitten.com/300/300"
+  "Lebron": [
+      "https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg",
+      "https://static01.nyt.com/images/2020/09/21/sports/21JPstreeter-sot-print/merlin_177247077_e7419310-206a-4084-990c-cd91782df8dc-articleLarge.jpg?quality=75&auto=webp&disable=upscale",
+      "https://static01.nyt.com/images/2020/03/09/sports/09nba-topteams1/09nba-topteams1-mediumSquareAt3X.jpg",
+      "https://a.espncdn.com/i/headshots/nba/players/full/1966.png", // LeBron
+      "https://e0.365dm.com/18/07/768x432/skysports-lebron-james-nba_4351375.jpg?20180702172340",
+      "https://the-talks.com/wp-content/uploads/2011/09/Lebron-James-01.jpg",
   ],
-  pixel_art: [
-      "https://placekitten.com/g/200/200", // TODO: Replace with real pixel art
+  "Pixel_Art": [
+      "https://art.pixilart.com/8c2813155827607.png", 
+      "https://art.pixilart.com/sr2786733220556.png"
   ],
-  minimalist: [
-      "https://placekitten.com/200/200?image=10",
+  "Minimalist": [
+      "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1000",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000"
   ]
 };
 
-let currentTheme = 'classic_cats';
+let currentTheme = 'Lebron';
 let userImages: string[] = [];
 
 // Initialize state
@@ -47,7 +52,7 @@ chrome.runtime.onMessage.addListener((message) => {
 });
 
 function getRandomImage(): string {
-  let source = THEMES['classic_cats'];
+  let source = THEMES['Lebron'];
 
   if (currentTheme === 'my_uploads' && userImages.length > 0) {
       source = userImages;
@@ -55,7 +60,10 @@ function getRandomImage(): string {
       source = THEMES[currentTheme];
   }
 
-  if (source.length === 0) return "https://placekitten.com/200/200";
+  if (source.length === 0 && THEMES['Lebron']) source = THEMES['Lebron'];
+  // Final fallback
+  if (!source || source.length === 0) return "https://static01.nyt.com/images/2020/09/21/sports/21JPstreeter-sot-print/merlin_177247077_e7419310-206a-4084-990c-cd91782df8dc-articleLarge.jpg";
+  
   return source[Math.floor(Math.random() * source.length)];
 }
 
@@ -100,7 +108,14 @@ function replaceAdsInRoot(root: Document | ShadowRoot | Element) {
       img.src = getRandomImage();
       img.className = 'ad-replacer-image';
       img.title = "Replaced by Ad Image Replacer";
+      img.alt = "Ad replaced by fun image";
       img.dataset.replaced = "true";
+
+      img.onerror = () => {
+          console.log("Ad Image Replacer: Image failed to load, using placeholder.");
+          img.src = chrome.runtime.getURL('assets/placeholder.svg'); // NOTE: Vite builds assets to assets/
+          img.onerror = null; 
+      };
 
       // If it's a wrapper, we might want to keep dimensions but clear content
       if (ad.parentNode) {

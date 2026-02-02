@@ -4,13 +4,13 @@ import ThemeCard from '../components/ThemeCard';
 
 // Defaults
 const PRESETS = [
-  { id: 'lebron', name: 'Lebron', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
-  { id: 'pixel_art', name: 'Pixel Art (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
-  { id: 'minimalist', name: 'Minimalist (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' }, 
+  { id: 'Lebron', name: 'Lebron', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
+  { id: 'Pixel_Art', name: 'Pixel Art (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
+  { id: 'Minimalist', name: 'Minimalist (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' }, 
 ];
 
 const Options = () => {
-  const [currentTheme, setCurrentTheme] = useState('lebron');
+  const [currentTheme, setCurrentTheme] = useState('Lebron');
   const [userImages, setUserImages] = useState<string[]>([]);
   const [status, setStatus] = useState('');
 

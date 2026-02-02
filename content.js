@@ -1,25 +1,48 @@
-// FUN_IMAGES is defined in ad_images.js
+// State for ad replacement
+let activeTheme = 'Lebron';
+let activeImages = [];
+
+function updateTheme(themeId, customImages) {
+    console.log(`Ad Replacer: Switching to theme '${themeId}'`);
+    activeTheme = themeId;
+    
+    if (themeId === 'my_uploads' && customImages && customImages.length > 0) {
+        activeImages = customImages;
+    } else if (typeof THEME_IMAGES !== 'undefined' && THEME_IMAGES[themeId]) {
+        activeImages = THEME_IMAGES[themeId];
+    } else {
+        // Fallback or default
+        if (typeof THEME_IMAGES !== 'undefined' && THEME_IMAGES['Lebron']) {
+             activeImages = THEME_IMAGES['Lebron'];
+        } else {
+             activeImages = [];
+        }
+    }
+    console.log(`Ad Replacer: Loaded ${activeImages.length} images for theme '${themeId}'`);
+}
+
+// Initialize theme from storage
+chrome.storage.local.get(['theme', 'userImages'], (result) => {
+    updateTheme(result.theme || 'Lebron', result.userImages);
+    replaceAds();
+});
 
 // Listen for theme changes from Options page
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'THEME_CHANGED') {
-        console.log("Theme changed:", message.theme);
-        // Force a re-run of ad replacement with new settings
-        // In a real implementation this would update the global FUN_IMAGES
-        // For now, we'll just reload to pick up changes is the simplest reliable way
-        // or we could re-trigger replaceAds() if we had the new images passed in message
-        if (message.images && message.images.length > 0) {
-            // Update local state if we were using it (mock)
-        }
+        console.log("Theme changed message received:", message.theme);
+        updateTheme(message.theme, message.images);
+        // Force re-replacement
         replaceAds();
     }
 });
 
 function getRandomImage() {
-    if (typeof FUN_IMAGES !== 'undefined' && FUN_IMAGES.length > 0) {
-        return FUN_IMAGES[Math.floor(Math.random() * FUN_IMAGES.length)];
+    if (activeImages && activeImages.length > 0) {
+        return activeImages[Math.floor(Math.random() * activeImages.length)];
     }
-    return "https://placekitten.com/200/200"; // Fallback
+    // Fallback if no images are loaded
+    return "https://static01.nyt.com/images/2020/09/21/sports/21JPstreeter-sot-print/merlin_177247077_e7419310-206a-4084-990c-cd91782df8dc-articleLarge.jpg?quality=75&auto=webp&disable=upscale"; 
 }
 
 // Inject Custom CSS
@@ -63,7 +86,15 @@ function replaceAdsInRoot(root) {
         img.src = getRandomImage();
         img.className = 'ad-replacer-image';
         img.title = "Replaced by Ad Image Replacer";
+        img.alt = "Ad replaced by fun image";
         img.dataset.replaced = "true";
+        
+        // Fallback to local placeholder if remote image fails
+        img.onerror = () => {
+            console.log("Ad Image Replacer: Image failed to load, using placeholder.");
+            img.src = chrome.runtime.getURL('placeholder.svg');
+            img.onerror = null; // Prevent infinite loop if placeholder fails
+        };
 
         // If it's a wrapper, we might want to keep dimensions but clear content
         // For now, replacing the element is the main strategy

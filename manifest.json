@@ -11,6 +11,17 @@
     "host_permissions": [
         "<all_urls>"
     ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "placeholder.svg",
+                "icon.png"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
     "background": {
         "service_worker": "background.js"
     },

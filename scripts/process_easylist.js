@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const EASYLIST_PATH = path.join(__dirname, '../easylist.txt');
-const RULES_PATH = path.join(__dirname, '../rules.json');
+const RULES_PATH = path.join(__dirname, '../public/rules.json');
 const REDIRECT_URL = "https://static01.nyt.com/images/2020/03/09/sports/09nba-topteams1/09nba-topteams1-mediumSquareAt3X.jpg";
 const MAX_RULES = 20000; // Safe limit for Chrome static rulesets
 
