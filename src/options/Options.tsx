@@ -4,13 +4,13 @@ import ThemeCard from '../components/ThemeCard';
 
 // Defaults
 const PRESETS = [
-  { id: 'classic_cats', name: 'Classic Cats', preview: 'https://placekitten.com/300/200' },
-  { id: 'pixel_art', name: 'Pixel Art (Premium)', preview: 'https://placekitten.com/g/300/200' }, // Placeholder
-  { id: 'minimalist', name: 'Minimalist (Premium)', preview: 'https://placekitten.com/300/200?image=1' }, // Placeholder
+  { id: 'lebron', name: 'Lebron', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
+  { id: 'pixel_art', name: 'Pixel Art (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
+  { id: 'minimalist', name: 'Minimalist (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' }, 
 ];
 
 const Options = () => {
-  const [currentTheme, setCurrentTheme] = useState('classic_cats');
+  const [currentTheme, setCurrentTheme] = useState('lebron');
   const [userImages, setUserImages] = useState<string[]>([]);
   const [status, setStatus] = useState('');
 
@@ -38,7 +38,7 @@ const Options = () => {
 
     const promises: Promise<string>[] = [];
     Array.from(files).forEach(file => {
-      if (file.size > 2 * 1024 * 1024) { // 2MB limit per image
+      if (file.size > 2 * 1024 * 1024) {
          showStatus(`Skipped ${file.name} (too large > 2MB)`, 'error');
          return;
       }
@@ -57,18 +57,16 @@ const Options = () => {
       const updated = [...userImages, ...newImages];
       setUserImages(updated);
       
-      // If we are on custom theme, update storage immediately to reflect new images
       if (currentTheme === 'my_uploads') {
           saveSettings(currentTheme, updated);
       } else {
-          // Just save images
           chrome.storage.local.set({ userImages: updated });
       }
       showStatus('Images uploaded!');
     });
   };
 
-  const removeUserImage = (index: int) => {
+  const removeUserImage = (index: number) => {
       const updated = userImages.filter((_, i) => i !== index);
       setUserImages(updated);
       if (currentTheme === 'my_uploads') {
@@ -80,8 +78,16 @@ const Options = () => {
 
   const saveSettings = (theme: string, images: string[]) => {
     chrome.storage.local.set({ theme, userImages: images }, () => {
-      // Notify content script
-      chrome.runtime.sendMessage({ type: 'THEME_CHANGED', theme, images });
+      try {
+        chrome.runtime.sendMessage({ type: 'THEME_CHANGED', theme, images }, (response) => {
+          if (chrome.runtime.lastError) {
+            // Ignore connection errors if popup/content currently inactive
+            console.log('Message status:', chrome.runtime.lastError.message);
+          }
+        });
+      } catch (e) {
+        console.log('Extension context invalid', e);
+      }
       showStatus('Settings saved!');
     });
   };

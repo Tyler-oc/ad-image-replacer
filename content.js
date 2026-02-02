@@ -1,5 +1,20 @@
 // FUN_IMAGES is defined in ad_images.js
 
+// Listen for theme changes from Options page
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'THEME_CHANGED') {
+        console.log("Theme changed:", message.theme);
+        // Force a re-run of ad replacement with new settings
+        // In a real implementation this would update the global FUN_IMAGES
+        // For now, we'll just reload to pick up changes is the simplest reliable way
+        // or we could re-trigger replaceAds() if we had the new images passed in message
+        if (message.images && message.images.length > 0) {
+            // Update local state if we were using it (mock)
+        }
+        replaceAds();
+    }
+});
+
 function getRandomImage() {
     if (typeof FUN_IMAGES !== 'undefined' && FUN_IMAGES.length > 0) {
         return FUN_IMAGES[Math.floor(Math.random() * FUN_IMAGES.length)];

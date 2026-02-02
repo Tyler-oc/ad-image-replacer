@@ -8,3 +8,8 @@ chrome.runtime.onInstalled.addListener(() => {
     }
   });
 });
+
+// Keep message channel open
+chrome.runtime.onMessage.addListener(() => {
+  return true; 
+});
