@@ -8,12 +8,12 @@ function updateTheme(themeId, customImages) {
     
     if (themeId === 'my_uploads' && customImages && customImages.length > 0) {
         activeImages = customImages;
-    } else if (typeof THEME_IMAGES !== 'undefined' && THEME_IMAGES[themeId]) {
-        activeImages = THEME_IMAGES[themeId];
+    } else if (typeof window.THEME_IMAGES !== 'undefined' && window.THEME_IMAGES[themeId]) {
+        activeImages = window.THEME_IMAGES[themeId];
     } else {
         // Fallback or default
-        if (typeof THEME_IMAGES !== 'undefined' && THEME_IMAGES['Lebron']) {
-             activeImages = THEME_IMAGES['Lebron'];
+        if (typeof window.THEME_IMAGES !== 'undefined' && window.THEME_IMAGES['Lebron']) {
+             activeImages = window.THEME_IMAGES['Lebron'];
         } else {
              activeImages = [];
         }
