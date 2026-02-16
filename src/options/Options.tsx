@@ -7,8 +7,6 @@ const PRESETS = [
   { id: 'Lebron', name: 'Lebron', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
   { id: 'Van Gogh', name: 'Van Gogh', preview: 'https://upload.wikimedia.org/wikipedia/commons/b/b0/Vincent_van_Gogh_%281853-1890%29_Caf%C3%A9terras_bij_nacht_%28place_du_Forum%29_Kr%C3%B6ller-M%C3%BCller_Museum_Otterlo_23-8-2016_13-35-40.JPG' },
   { id: 'Yoshimoto Nara', name: 'Yoshimoto Nara', preview: 'https://cdn.sanity.io/images/dqllnil6/production/ebf28df2c88fdde7522402a96e7ad7ae45219345-1430x1600.jpg?w=3840&q=60&auto=format' },
-  { id: 'Pixel_Art', name: 'Pixel Art (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' },
-  { id: 'Minimalist', name: 'Minimalist (Premium)', preview: 'https://images2.minutemediacdn.com/image/upload/c_crop,x_0,y_65,w_5253,h_2954/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/all_lakers/01k90cyr2szk5wwnxpmr.jpg' }, 
 ];
 
 const Options = () => {
